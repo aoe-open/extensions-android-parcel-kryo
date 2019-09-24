@@ -40,8 +40,10 @@ dependencies {
 apply plugin: 'com.novoda.bintray-release'
 
 Properties properties = new Properties()
-InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
-properties.load(inputStream)
+if (project.rootProject.file('local.properties').exists()) {
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+    properties.load(inputStream)
+}
 
 publish {
     bintrayUser = properties.getProperty("bintray.user")
