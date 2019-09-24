@@ -1,0 +1,65 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.core:core-ktx:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation "com.didi.aoe:library-logging:1.0.0"
+    implementation "com.didi.aoe:library-api:1.0.0"
+
+    // 对象序列化框架kryo
+    implementation 'com.esotericsoftware:kryo-shaded:4.0.2'
+}
+
+apply plugin: 'com.novoda.bintray-release'
+
+Properties properties = new Properties()
+InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+properties.load(inputStream)
+
+publish {
+    bintrayUser = properties.getProperty("bintray.user")
+    bintrayKey = properties.getProperty("bintray.apikey")
+    userOrg = 'aoe'
+    groupId = 'com.didi.aoe'
+    website = 'https://github.com/didi/aoe'
+    dryRun = false
+
+    publishVersion = '1.1.0'
+    artifactId = 'extensions-parcel-kryo'
+    desc = 'The AoE parcel kryo extensions'
+}
+
+allprojects {
+    tasks.withType(Javadoc) {
+        enabled false
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
